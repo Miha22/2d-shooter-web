@@ -4,7 +4,7 @@
   "description": "Canvas game for web course",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "webpack; node app.js",
     "dev": "nodemon app.js"
   },
   "repository": {
