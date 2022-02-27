@@ -74,12 +74,12 @@ class Projectile {
 }
 
 class Enemy {
-    constructor(x, y, radius, color, velocity) {
+    constructor(x, y, radius, color) {
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.color = color;
-        this.velocity = velocity;
+        //this.velocity = velocity;
     }
 
     draw() {
@@ -91,8 +91,12 @@ class Enemy {
 
     update() {
         this.draw();
-        this.x = this.x + this.velocity.x;
-        this.y = this.y + this.velocity.y;
+        const angleRad = Math.atan2(player.getY() - y, player.getX() - x);
+        const velocity = { x: Math.cos(angleRad), y: Math.sin(angleRad) };
+        this.x = this.x + velocity.x;
+        this.y = this.y + velocity.y;
+        // this.x = this.x + this.velocity.x;
+        // this.y = this.y + this.velocity.y;
     }
 }
 
@@ -113,10 +117,11 @@ function spawnEnemies() {
             y = Math.random() * canvas.height;
         }
         const color = 'yellow';
-        const angleRad = Math.atan2(player.getY() - y, player.getX() - x);
-        const velocity = { x: Math.cos(angleRad), y: Math.sin(angleRad) };
+        // const angleRad = Math.atan2(player.getY() - y, player.getX() - x);
+        // const velocity = { x: Math.cos(angleRad), y: Math.sin(angleRad) };
         console.log('Spawned enemy');
-        enemies.push(new Enemy(x, y, radius, color, velocity));  
+        enemies.push(new Enemy(x, y, radius, color));
+        //enemies.push(new Enemy(x, y, radius, color, velocity));    
     }, 1000);
 }
 
