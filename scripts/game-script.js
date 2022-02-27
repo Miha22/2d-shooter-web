@@ -171,33 +171,33 @@ document.addEventListener('keydown', function(event) {
 document.addEventListener('keyup', function(event) {
     const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
     const { code } = event;
-    if (code === "KeyW") { // KeyA, KeyS, KeyD
+    if (code === "KeyW" || key === "ArrowUp") { // KeyA, KeyS, KeyD
         releasedUp();
     }
-    if (code === "KeyS") { // KeyA, KeyS, KeyD
+    if (code === "KeyS" || key === "ArrowDown") { // KeyA, KeyS, KeyD
         releasedDown();
     }
-    if (code === "KeyD") { // KeyA, KeyS, KeyD
+    if (code === "KeyD" || key === "ArrowRight") { // KeyA, KeyS, KeyD
         releasedRight();
     }
-    if (code === "KeyA") { // KeyA, KeyS, KeyD
+    if (code === "KeyA" || key === "ArrowLeft") { // KeyA, KeyS, KeyD
         releasedLeft();
     }
 
-    switch (key) {
-        case "ArrowLeft":
-            pressedLeft();
-            break;
-        case "ArrowRight":
-            pressedRight();
-            break;
-        case "ArrowUp":
-            pressedUp();
-            break;
-        case "ArrowDown":
-            pressedDown();
-            break;
-    }
+    // switch (key) {
+    //     case "ArrowLeft":
+    //         pressedLeft();
+    //         break;
+    //     case "ArrowRight":
+    //         pressedRight();
+    //         break;
+    //     case "ArrowUp":
+    //         pressedUp();
+    //         break;
+    //     case "ArrowDown":
+    //         pressedDown();
+    //         break;
+    // }
 });
 
 animate();
