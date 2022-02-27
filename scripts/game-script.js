@@ -1,6 +1,7 @@
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const projectiles = [];
+const enemies = [];
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const x = canvas.width / 2;
@@ -72,8 +73,44 @@ class Projectile {
     }
 }
 
+class Enemy {
+    constructor(x, y, radius, color, velocity) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color;
+        this.velocity = velocity;
+    }
+
+    draw() {
+        context.beginPath();
+        context.arc(this.x, this.y, this.radius, 0, 360, false);//Math.PI * 2
+        context.fillStyle = this.color;
+        context.fill();
+    }
+
+    update() {
+        this.draw();
+        this.x = this.x + this.velocity.x;
+        this.y = this.y + this.velocity.y;
+    }
+}
+
 const player = new Player(x, y, 30, 'green');
 // const projectile = new Projectile(player.getX(), player.getY(), 7, 'red', { x: 1, y: 1 });
+
+function spawnEnemies() {
+    setInterval(() => {
+        const x = Math.random() * canvas.width;//enemy spawn X coord.
+        const y = Math.random() * canvas.height;//enemy spawn Y coord.
+        const radius = 30;
+        const color = 'yellow';
+        const angleRad = Math.atan2(Math.abs(y - player.getY()), Math.abs(x - player.getX()));
+        const velocity = { x: Math.cos(angleRad), y: Math.sin(angleRad) };
+        console.log('Spawbed enemy');
+        enemies.push(new Enemy(x, y, radius, color, velocity));  
+    }, 1000);
+}
 
 function clearTrail() {
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -85,6 +122,9 @@ function animate() {
     //player.draw();
     player.update();
     projectiles.forEach(p => {
+        p.update();
+    });
+    enemies.forEach(p => {
         p.update();
     });
 }
@@ -201,3 +241,4 @@ document.addEventListener('keyup', function(event) {
 });
 
 animate();
+spawnEnemies();
