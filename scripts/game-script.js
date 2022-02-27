@@ -132,8 +132,19 @@ function animate() {
     projectiles.forEach(p => {
         p.update();
     });
-    enemies.forEach(p => {
-        p.update();
+    enemies.forEach((e, indexE) => {
+        e.update();
+
+        projectiles.forEach((p, indexP) => {
+            const dist = Math.hypot(p.x - e.x, p.y - e.y);
+
+            if(dist - p.radius - e.radius < 0.1) {
+                setTimeout(() => {
+                    enemies.splice(indexE, 1);
+                    projectiles.splice(indexP, 1); 
+                }, 0);
+            }
+        });
     });
 }
 
