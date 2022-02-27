@@ -101,13 +101,21 @@ const player = new Player(x, y, 30, 'green');
 
 function spawnEnemies() {
     setInterval(() => {
-        const x = Math.random() * canvas.width;//enemy spawn X coord.
-        const y = Math.random() * canvas.height;//enemy spawn Y coord.
-        const radius = 30;
+        const radius = 15;// Can be random also, but it seems fine for me
+        let x, y; //spawn coords.
+
+        if(Math.random() < 0.5) {
+            x = Math.random() * canvas.width;
+            y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
+        }
+        else {
+            x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
+            y = Math.random() * canvas.height;
+        }
         const color = 'yellow';
-        const angleRad = Math.atan2(Math.abs(y - player.getY()), Math.abs(x - player.getX()));
+        const angleRad = Math.atan2(player.getY() - y, player.getX() - x);
         const velocity = { x: Math.cos(angleRad), y: Math.sin(angleRad) };
-        console.log('Spawbed enemy');
+        console.log('Spawned enemy');
         enemies.push(new Enemy(x, y, radius, color, velocity));  
     }, 1000);
 }
