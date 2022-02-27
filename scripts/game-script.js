@@ -74,12 +74,13 @@ class Projectile {
 }
 
 class Enemy {
-    constructor(x, y, radius, color) {
-        this.x = x;
-        this.y = y;
+    constructor(x, y, radius, color, velocity, distance) {
+        this.x = x;//current pos on X
+        this.y = y;//current pos on Y
         this.radius = radius;
         this.color = color;
-        //this.velocity = velocity;
+        this.distance = distance;
+        this.velocity = velocity;
     }
 
     draw() {
@@ -91,12 +92,22 @@ class Enemy {
 
     update() {
         this.draw();
-        const angleRad = Math.atan2(player.getY() - y, player.getX() - x);
+        const angleRad = Math.atan2(player.y - this.y, player.x - this.x);
         const velocity = { x: Math.cos(angleRad), y: Math.sin(angleRad) };
+
+        //const newDist = Math.hypot(player.x - this.x, player.y - this.y);
+
         this.x = this.x + velocity.x;
         this.y = this.y + velocity.y;
-        // this.x = this.x + this.velocity.x;
-        // this.y = this.y + this.velocity.y;
+        // if(newDist < this.distance) {
+        //     this.x = this.x + this.velocity.x;
+        //     this.y = this.y + this.velocity.y;
+        // }
+        // else {   
+        //     this.distance = newDist;
+        //     this.x = this.x + velocity.x;
+        //     this.y = this.y + velocity.y;
+        // }
     }
 }
 
@@ -117,10 +128,11 @@ function spawnEnemies() {
             y = Math.random() * canvas.height;
         }
         const color = 'yellow';
-        // const angleRad = Math.atan2(player.getY() - y, player.getX() - x);
-        // const velocity = { x: Math.cos(angleRad), y: Math.sin(angleRad) };
+        const angleRad = Math.atan2(player.y - y, player.x - x);
+        const velocity = { x: Math.cos(angleRad), y: Math.sin(angleRad) };
         console.log('Spawned enemy');
-        enemies.push(new Enemy(x, y, radius, color));
+        const dist = Math.hypot(player.x - velocity.x, player.y - velocity.y);
+        enemies.push(new Enemy(x, y, radius, color, velocity, dist));
         //enemies.push(new Enemy(x, y, radius, color, velocity));    
     }, 1000);
 }
