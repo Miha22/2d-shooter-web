@@ -150,8 +150,16 @@ function animate() {
         p.update();
     });
     enemies.forEach((e, indexE) => {
-        e.update();
+        const distToPlayer = Math.hypot(player.x - e.x, player.y - e.y);
+        if(distToPlayer - e.radius - player.radius < 0.1) {
+            setTimeout(() => {
+                enemies.splice(indexE, 1);
+            }, 0);
+            console.log('Player got hit');
+            return;
+        }
 
+        e.update();
         projectiles.forEach((p, indexP) => {
             const dist = Math.hypot(p.x - e.x, p.y - e.y);
 
