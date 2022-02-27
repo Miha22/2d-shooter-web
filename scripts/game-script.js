@@ -29,16 +29,16 @@ class Player {
     update() {
         this.draw();
         if(this.moveUp) {
-            this.y = this.y - 1;
+            this.y = this.y - 2;
         }
         if(this.moveDown) {
-            this.y = this.y + 1;
+            this.y = this.y + 2;
         }
         if(this.moveRight) {
-            this.x = this.x + 1;
+            this.x = this.x + 2;
         }
         if(this.moveLeft) {
-            this.x = this.x - 1;
+            this.x = this.x - 2;
         }
     }
 
@@ -68,8 +68,8 @@ class Projectile {
 
     update() {
         this.draw();
-        this.x = this.x + this.velocity.x;
-        this.y = this.y + this.velocity.y;
+        this.x = this.x + this.velocity.x * 4;
+        this.y = this.y + this.velocity.y * 4;
     }
 }
 
@@ -97,8 +97,8 @@ class Enemy {
 
         //const newDist = Math.hypot(player.x - this.x, player.y - this.y);
 
-        this.x = this.x + velocity.x;
-        this.y = this.y + velocity.y;
+        this.x = this.x + velocity.x * 2;
+        this.y = this.y + velocity.y * 2;
         // if(newDist < this.distance) {
         //     this.x = this.x + this.velocity.x;
         //     this.y = this.y + this.velocity.y;
