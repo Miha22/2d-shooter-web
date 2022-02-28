@@ -79,7 +79,7 @@ class Enemy {
         this.y = y;//current pos on Y
         this.radius = radius;
         this.strength = radius / 10;
-        this.color = this.strength == 1 ? color : this.strength == 2 ? 'orange' : 'rose';
+        this.color = color;
         this.distance = distance;
         this.velocity = velocity;
     }
@@ -132,6 +132,7 @@ function spawnEnemies() {
             x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius;
             y = Math.random() * canvas.height;
         }
+        //const color = radius == 10 ? 'yellow' : radius == 20 ? 'orange' : 'rose';
         const color = 'yellow';
         //const color = `hsl(${Math.random() * 360}, 50%, 50)`; // {1: 0-360 red green or blue} {2: saturation in % how deep is this color} {3: lightness, how bright or dull this color is}. Hue saturation lightness
         const angleRad = Math.atan2(player.y - y, player.x - x);
@@ -174,7 +175,7 @@ function animate() {
             }, 0);
 
             context.beginPath();
-            player.radius = player.radius / (1 + e.strength / 10);//change player radius because he got hit by enemy
+            player.radius = player.radius / (1 + e.radius / 100);//change player radius because he got hit by enemy
             context.arc(player.x, player.y, player.radius, 0, 360, false);//Math.PI * 2
             context.fillStyle = player.color;
             context.fill();
@@ -198,7 +199,7 @@ function animate() {
                     setTimeout(() => {
                         enemies.splice(indexE, 1);
                         projectiles.splice(indexP, 1); 
-                        player.radius = player.radius * (1 + e.strength / 10);//change player radius because he killed enemy
+                        player.radius = player.radius * 1.1;//change player radius because he killed enemy
                     }, 0);
                 }
 
