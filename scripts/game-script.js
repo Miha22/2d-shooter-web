@@ -68,8 +68,8 @@ class Projectile {
 
     update() {
         this.draw();
-        this.x = this.x + this.velocity.x * 4;
-        this.y = this.y + this.velocity.y * 4;
+        this.x = this.x + this.velocity.x * 5;
+        this.y = this.y + this.velocity.y * 5;
     }
 }
 
@@ -97,8 +97,8 @@ class Enemy {
 
         //const newDist = Math.hypot(player.x - this.x, player.y - this.y);
 
-        this.x = this.x + velocity.x * 2;
-        this.y = this.y + velocity.y * 2;
+        this.x = this.x + velocity.x * 10;
+        this.y = this.y + velocity.y * 10;
         // if(newDist < this.distance) {
         //     this.x = this.x + this.velocity.x;
         //     this.y = this.y + this.velocity.y;
@@ -134,7 +134,7 @@ function spawnEnemies() {
         const dist = Math.hypot(player.x - velocity.x, player.y - velocity.y);
         enemies.push(new Enemy(x, y, radius, color, velocity, dist));
         //enemies.push(new Enemy(x, y, radius, color, velocity));    
-    }, 1000);
+    }, 250);
 }
 
 function clearTrail() {
@@ -155,6 +155,13 @@ function animate() {
             setTimeout(() => {
                 enemies.splice(indexE, 1);
             }, 0);
+
+            context.beginPath();
+            player.radius = player.radius / 1.2;
+            context.arc(player.x, player.y, player.radius, 0, 360, false);//Math.PI * 2
+            context.fillStyle = player.color;
+            context.fill();
+
             console.log('Player got hit');
             return;
         }
@@ -168,6 +175,11 @@ function animate() {
                     enemies.splice(indexE, 1);
                     projectiles.splice(indexP, 1); 
                 }, 0);
+                context.beginPath();
+                player.radius = player.radius * 1.1;
+                context.arc(player.x, player.y, player.radius, 0, 360, false);//Math.PI * 2
+                context.fillStyle = player.color;
+                context.fill();
             }
         });
     });
