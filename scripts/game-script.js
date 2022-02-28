@@ -78,7 +78,8 @@ class Enemy {
         this.x = x;//current pos on X
         this.y = y;//current pos on Y
         this.radius = radius;
-        this.color = color;
+        this.strength = radius / 10;
+        this.color = this.strength == 1 ? color : this.strength == 2 ? 'orange' : 'rose';
         this.distance = distance;
         this.velocity = velocity;
     }
@@ -97,8 +98,8 @@ class Enemy {
 
         //const newDist = Math.hypot(player.x - this.x, player.y - this.y);
 
-        this.x = this.x + velocity.x * 10;
-        this.y = this.y + velocity.y * 10;
+        this.x = this.x + velocity.x * 4;
+        this.y = this.y + velocity.y * 4;
         // if(newDist < this.distance) {
         //     this.x = this.x + this.velocity.x;
         //     this.y = this.y + this.velocity.y;
@@ -114,9 +115,13 @@ class Enemy {
 const player = new Player(x, y, 30, 'green');
 // const projectile = new Projectile(player.getX(), player.getY(), 7, 'red', { x: 1, y: 1 });
 
+function endGame(animationId) {
+    cancelAnimationFrame(animationId);
+}
+
 function spawnEnemies() {
     setInterval(() => {
-        const radius = 15;// Can be random also, but it seems fine for me
+        const radius = Math.random() < 0.5 ? 10 : Math.random < 0.5 ? 20 : 30;// Can be random also, but it seems fine for me
         let x, y; //spawn coords.
 
         if(Math.random() < 0.5) {
@@ -128,28 +133,40 @@ function spawnEnemies() {
             y = Math.random() * canvas.height;
         }
         const color = 'yellow';
+        //const color = `hsl(${Math.random() * 360}, 50%, 50)`; // {1: 0-360 red green or blue} {2: saturation in % how deep is this color} {3: lightness, how bright or dull this color is}. Hue saturation lightness
         const angleRad = Math.atan2(player.y - y, player.x - x);
         const velocity = { x: Math.cos(angleRad), y: Math.sin(angleRad) };
         console.log('Spawned enemy');
         const dist = Math.hypot(player.x - velocity.x, player.y - velocity.y);
         enemies.push(new Enemy(x, y, radius, color, velocity, dist));
         //enemies.push(new Enemy(x, y, radius, color, velocity));    
-    }, 250);
+    }, 1000);
 }
 
 function clearTrail() {
+    //context.fillStyle('rgba(0, 0, 0, 0.1)');//fade effect
     context.clearRect(0, 0, canvas.width, canvas.height);
+    //context.fillRect(...Enemy);
 }
 
 function animate() {
-    requestAnimationFrame(animate);
+    const animationId = requestAnimationFrame(animate);
     clearTrail();
     //player.draw();
     player.update();
-    projectiles.forEach(p => {
+    projectiles.forEach((p, indexP) => {
         p.update();
+
+        //remove projectiles that went beyond the screen
+        if(p.x + p.radius < 0 || p.x - p.radius > canvas.width || 
+            p.y + p.radius < 0 || p.y - p.radius > canvas.height) {
+                setTimeout(() => {
+                    projectiles.splice(indexP, 1);
+                }, 0);
+        }
     });
     enemies.forEach((e, indexE) => {
+        e.update();
         const distToPlayer = Math.hypot(player.x - e.x, player.y - e.y);
         if(distToPlayer - e.radius - player.radius < 0.1) {
             setTimeout(() => {
@@ -157,7 +174,7 @@ function animate() {
             }, 0);
 
             context.beginPath();
-            player.radius = player.radius / 1.2;
+            player.radius = player.radius / (1 + e.strength / 10);//change player radius because he got hit by enemy
             context.arc(player.x, player.y, player.radius, 0, 360, false);//Math.PI * 2
             context.fillStyle = player.color;
             context.fill();
@@ -166,17 +183,28 @@ function animate() {
             return;
         }
 
-        e.update();
         projectiles.forEach((p, indexP) => {
             const dist = Math.hypot(p.x - e.x, p.y - e.y);
 
+            //when bullet/projectile hits enemy
             if(dist - p.radius - e.radius < 0.1) {
-                setTimeout(() => {
-                    enemies.splice(indexE, 1);
-                    projectiles.splice(indexP, 1); 
-                }, 0);
+                if(e.radius > 10) {
+                    e.radius /= 2;
+                    setTimeout(() => {
+                        projectiles.splice(indexP, 1); 
+                    }, 0);
+                }
+                else {
+                    setTimeout(() => {
+                        enemies.splice(indexE, 1);
+                        projectiles.splice(indexP, 1); 
+                        player.radius = player.radius * (1 + e.strength / 10);//change player radius because he killed enemy
+                    }, 0);
+                }
+
+                //Increasing player size if he hit the enemy
                 context.beginPath();
-                player.radius = player.radius * 1.1;
+                //player.radius = player.radius * 1.1;
                 context.arc(player.x, player.y, player.radius, 0, 360, false);//Math.PI * 2
                 context.fillStyle = player.color;
                 context.fill();
