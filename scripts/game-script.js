@@ -3,6 +3,7 @@ const { gsap } = require('gsap');
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const projectiles = [];
+const particles = [];
 const enemies = [];
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -114,6 +115,35 @@ class Enemy {
     }
 }
 
+let friction = 0.98;
+class Particle {
+    constructor(x, y, radius, color, velocity, distance) {
+        this.x = x;//current pos on X
+        this.y = y;//current pos on Y
+        this.radius = radius;
+        this.color = color;
+        this.velocity = velocity;
+        this.alpha = 1;
+    }
+
+    draw() {
+        context.save();
+        context.globalAlpha = this.alpha;
+        context.beginPath();
+        context.arc(this.x, this.y, this.radius, 0, 360, false);//Math.PI * 2
+        context.fillStyle = this.color;
+        context.fill();
+        context.restore();
+    }
+
+    update() {
+        this.draw();
+        this.x = this.x + this.velocity.x * friction;
+        this.y = this.y + this.velocity.y * friction;
+        this.alpha -= 0.01;
+    }
+}
+
 const player = new Player(x, y, 30, 'green');
 // const projectile = new Projectile(player.getX(), player.getY(), 7, 'red', { x: 1, y: 1 });
 
@@ -159,6 +189,14 @@ function animate() {
     clearTrail();
     //player.draw();
     player.update();
+
+    particles.forEach((pr, indexPr) => {
+        if(pr.alpha < 0.1) {
+            particles.splice(indexPr, 1);
+            return;
+        }
+        pr.update();
+    });
     projectiles.forEach((p, indexP) => {
         p.update();
 
@@ -174,6 +212,12 @@ function animate() {
         e.update();
         const distToPlayer = Math.hypot(player.x - e.x, player.y - e.y);
         if(distToPlayer - e.radius - player.radius < 0.1) {
+            //end game if player is too small
+            if(player.radius / 1.1 < 7) {
+                endGame(animationId);
+                return;
+            }
+            
             setTimeout(() => {
                 enemies.splice(indexE, 1);
             }, 0);
@@ -194,6 +238,15 @@ function animate() {
 
             //when bullet/projectile hits enemy
             if(dist - p.radius - e.radius < 0.1) {
+                //creating particles kinda explosion
+                for (let i = 0; i < e.radius * 2; i++) {//the bigger is enemy the bigger is explosion
+                    particles.push(new Particle(p.x, p.y, Math.random() * 2, e.color, 
+                    { 
+                        x: (Math.random() - 0.5) * Math.random() * 6, //fast explosion effect
+                        y: (Math.random() - 0.5) * Math.random() * 6 
+                    }));                 
+                }
+
                 if(e.radius > 10) {
                     //e.radius /= 2; Gonna make smooth resize
                     gsap.to(e, { radius: e.radius / 2 });
