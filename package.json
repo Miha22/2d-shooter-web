@@ -24,6 +24,7 @@
     "express-handlebars": "^6.0.2",
     "express-session": "^1.17.2",
     "express-validator": "^6.14.0",
+    "gsap": "^3.9.1",
     "helmet": "^5.0.2",
     "jshint": "^2.13.4",
     "moment-timezone": "^0.5.34",

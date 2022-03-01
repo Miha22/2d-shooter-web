@@ -1,3 +1,5 @@
+const { gsap } = require('gsap');
+
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const projectiles = [];
@@ -145,8 +147,10 @@ function spawnEnemies() {
 }
 
 function clearTrail() {
-    //context.fillStyle('rgba(0, 0, 0, 0.1)');//fade effect
+    //context.fillStyle = 'rgba(0, 0, 0, 0.1)';//fade effect
     context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    //context.fillRect(0, 0, canvas.width, canvas.height);
     //context.fillRect(...Enemy);
 }
 
@@ -190,7 +194,8 @@ function animate() {
             //when bullet/projectile hits enemy
             if(dist - p.radius - e.radius < 0.1) {
                 if(e.radius > 10) {
-                    e.radius /= 2;
+                    //e.radius /= 2; Gonna make smooth resize
+                    gsap.to(e, { radius: e.radius / 2 });
                     setTimeout(() => {
                         projectiles.splice(indexP, 1); 
                     }, 0);
