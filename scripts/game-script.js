@@ -154,9 +154,10 @@ function endGame(animationId) {
 
 function spawnEnemies() {
     setInterval(() => {
-        const radius = Math.random() < 0.5 ? 10 : Math.random < 0.5 ? 20 : 30;// Can be random also, but it seems fine for me
+        const radius = Math.random() < 0.5 ? 10 : Math.random() < 0.5 ? 20 : 30;// Can be random also, but it seems fine for me
         let x, y; //spawn coords.
 
+        //spawns across and behind canvas observable scope
         if(Math.random() < 0.5) {
             x = Math.random() * canvas.width;
             y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius;
@@ -183,6 +184,19 @@ function clearTrail() {
     context.fillStyle = 'rgba(0, 0, 0, 0.1)';
     //context.fillRect(0, 0, canvas.width, canvas.height);
     //context.fillRect(...Enemy);
+}
+
+function createParticles(projection, color, amount) {
+    for (let i = 0; i < amount; i++) {//the bigger is enemy the bigger is explosion
+        particles.push(new Particle(
+            projection.x, projection.y, Math.random() * 2 + 2, color, 
+                { 
+                    x: (Math.random() - 0.5) * Math.random() * 6, //fast explosion effect
+                    y: (Math.random() - 0.5) * Math.random() * 6 
+                }
+            )
+        );            
+    }
 }
 
 function animate() {
@@ -219,13 +233,15 @@ function animate() {
                 return;
             }
             
+            createParticles(player, player.color, player.radius / 2);//create particles on player hit
+
             setTimeout(() => {
                 enemies.splice(indexE, 1);
             }, 0);
 
             context.beginPath();
             //player.radius = player.radius / (1 + e.radius / 100);//change player radius because he got hit by enemy
-            gsap.to(player, { radius: player.radius / (1 + e.radius / 100) });//smooth player reize
+            gsap.to(player, { radius: player.radius / (1 + e.radius / 100 + 0.1) });//smooth player reize
             context.arc(player.x, player.y, player.radius, 0, 360, false);//Math.PI * 2
             context.fillStyle = player.color;
             context.fill();
@@ -240,13 +256,7 @@ function animate() {
             //when bullet/projectile hits enemy
             if(dist - p.radius - e.radius < 0.1) {
                 //creating particles kinda explosion
-                for (let i = 0; i < e.radius * 2; i++) {//the bigger is enemy the bigger is explosion
-                    particles.push(new Particle(p.x, p.y, Math.random() * 2, e.color, 
-                    { 
-                        x: (Math.random() - 0.5) * Math.random() * 6, //fast explosion effect
-                        y: (Math.random() - 0.5) * Math.random() * 6 
-                    }));                 
-                }
+                createParticles(p, e.color, e.radius / 2); //projection, enemy, amount of particles
 
                 if(e.radius > 10) {
                     //e.radius /= 2; Gonna make smooth resize
