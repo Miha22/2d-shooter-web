@@ -179,7 +179,8 @@ function animate() {
             }, 0);
 
             context.beginPath();
-            player.radius = player.radius / (1 + e.radius / 100);//change player radius because he got hit by enemy
+            //player.radius = player.radius / (1 + e.radius / 100);//change player radius because he got hit by enemy
+            gsap.to(player, { radius: player.radius / (1 + e.radius / 100) });//smooth player reize
             context.arc(player.x, player.y, player.radius, 0, 360, false);//Math.PI * 2
             context.fillStyle = player.color;
             context.fill();
@@ -204,7 +205,8 @@ function animate() {
                     setTimeout(() => {
                         enemies.splice(indexE, 1);
                         projectiles.splice(indexP, 1); 
-                        player.radius = player.radius * 1.1;//change player radius because he killed enemy
+                        //player.radius = player.radius * 1.1;//change player radius because he killed enemy
+                        gsap.to(player, { radius: player.radius * 1.1 });
                     }, 0);
                 }
 
