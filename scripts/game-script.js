@@ -3,6 +3,8 @@ const { gsap } = require('gsap');
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
+const scoreText = document.querySelector("#scoreValue");
+let scoreValue = 0;
 const projectiles = [];
 const particles = [];
 const enemies = [];
@@ -228,7 +230,7 @@ function animate() {
         const distToPlayer = Math.hypot(player.x - e.x, player.y - e.y);
         if(distToPlayer - e.radius - player.radius < 0.1) {
             //end game if player is too small
-            if(player.radius / 1.1 < 7) {
+            if(player.radius / 1.1 < 10) {
                 endGame(animationId);
                 return;
             }
@@ -258,14 +260,18 @@ function animate() {
                 //creating particles kinda explosion
                 createParticles(p, e.color, e.radius / 2); //projection, enemy, amount of particles
 
-                if(e.radius > 10) {
+                if(e.radius > 10) {// enemy is damaged
                     //e.radius /= 2; Gonna make smooth resize
+                    scoreValue += 1; //update score value
+                    scoreText.innerHTML = scoreValue;//display
                     gsap.to(e, { radius: e.radius / 2 });
                     setTimeout(() => {
                         projectiles.splice(indexP, 1); 
                     }, 0);
                 }
-                else {
+                else {//enemy is killed
+                    scoreValue += e.strength * 3;//update score value
+                    scoreText.innerHTML = scoreValue;
                     setTimeout(() => {
                         enemies.splice(indexE, 1);
                         projectiles.splice(indexP, 1); 
