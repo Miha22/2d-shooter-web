@@ -247,13 +247,13 @@ function animate() {
             //end game if player is too small
             if(player.radius / 1.1 < 10) {
     
+                endGame(animationId);
                 dimBackground('black', 3);
                 dimScore('white', 3);
                 bigScore.innerHTML = scoreValue;
                 startBanner.style.display = 'flex';
-                gsap.to(player, { radius: 0, duration: 1 });//smooth player reize
-                createParticles(player, player.color, player.radius);
-                endGame(animationId);
+                //gsap.to(player, { radius: 0, duration: 1 });//smooth player reize
+                //createParticles(player, player.color, player.radius);
 
                 return;
             }
@@ -373,7 +373,6 @@ startBtn.addEventListener('click', (event) => {
     dimScore('black', 3);
     animate();
     registerShoot();
-    spawnEnemies();
 });
 
 function dimBackground(color, duration) {
@@ -451,3 +450,4 @@ document.addEventListener('keyup', function(event) {
 
 dimBackground('black', 3);
 dimScore('white, 3');
+spawnEnemies();
