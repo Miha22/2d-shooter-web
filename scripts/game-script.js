@@ -246,14 +246,15 @@ function animate() {
         if(distToPlayer - e.radius - player.radius < 0.1) {
             //end game if player is too small
             if(player.radius / 1.1 < 10) {
-                //createParticles(player, player.color, player.radius);
-                //gsap.to(player, { radius: 0, duration: 1 });//smooth player reize
-
-                endGame(animationId);
+    
                 dimBackground('black', 3);
                 dimScore('white', 3);
                 bigScore.innerHTML = scoreValue;
                 startBanner.style.display = 'flex';
+                gsap.to(player, { radius: 0, duration: 1 });//smooth player reize
+                createParticles(player, player.color, player.radius);
+                endGame(animationId);
+
                 return;
             }
             
@@ -353,21 +354,25 @@ function releasedLeft() {
     console.log('Released LEFT');
 }
 
-window.addEventListener('click', (e) => {
-    const angleRad = Math.atan2(e.clientY - player.getY(), e.clientX - player.getX());
-    console.log(angleRad);
-    const velocity = { x: Math.cos(angleRad), y: Math.sin(angleRad) };
-    projectiles.push(new Projectile(player.getX(), player.getY(), 7, 'red', velocity));
-});
+function registerShoot() {
+    window.addEventListener('click', (e) => {
+        const angleRad = Math.atan2(e.clientY - player.getY(), e.clientX - player.getX());
+        console.log(angleRad);
+        const velocity = { x: Math.cos(angleRad), y: Math.sin(angleRad) };
+        projectiles.push(new Projectile(player.getX(), player.getY(), 7, 'red', velocity));
+    });
+}
 
 //start game
-startBtn.addEventListener('click', () => {
+startBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
     init();
 
     startBanner.style.display = 'none';
     dimBackground('white', 3);
     dimScore('black', 3);
     animate();
+    registerShoot();
     spawnEnemies();
 });
 
