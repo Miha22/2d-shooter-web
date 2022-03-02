@@ -4,6 +4,9 @@ const { gsap } = require('gsap');
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const scoreText = document.querySelector("#scoreValue");
+const startBtn = document.querySelector("#startBtn");
+const startBanner = document.querySelector("#startBanner");
+const body = document.querySelector('body');
 let scoreValue = 0;
 const projectiles = [];
 const particles = [];
@@ -232,6 +235,7 @@ function animate() {
             //end game if player is too small
             if(player.radius / 1.1 < 10) {
                 endGame(animationId);
+                dimBackground('black', 3);
                 return;
             }
             
@@ -338,6 +342,17 @@ window.addEventListener('click', (e) => {
     projectiles.push(new Projectile(player.getX(), player.getY(), 7, 'red', velocity));
 });
 
+startBtn.addEventListener('click', () => {
+    startBanner.style.display = 'none';
+    dimBackground('white', 3);
+    animate();
+    spawnEnemies();
+});
+
+function dimBackground(color, duration) {
+    gsap.to(body, { background: color, duration: duration });
+}
+
 document.addEventListener('keydown', function(event) {
     const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
     const { code } = event;
@@ -402,5 +417,4 @@ document.addEventListener('keyup', function(event) {
     // }
 });
 
-animate();
-spawnEnemies();
+dimBackground('black', 3);

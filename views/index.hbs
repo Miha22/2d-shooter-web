@@ -1,5 +1,16 @@
 <div id="score" class="fixed text-white text-sm ml-2 mt-1 select-none">
-    <span>Score: </span>
-    <span id="scoreValue">0</span>
+    <span id="scoreName" class="text-3xl font-bold">Score: </span>
+    <span id="scoreValue" class="text-3xl font-bold">0</span>
 </div>
+
+<div id="startBanner" class="fixed inset-0 flex items-center justify-center">
+    <div class="bg-white max-w-md w-full p-6 text-center">
+        <p class="text-4xl font-bold leading-none">0</p>
+        <p class="text-sm text-gray-700 mb-4">Points</p>
+        <div>
+            <button id="startBtn" class="select-none bg-blue-500 text-white w-full py-3 rounded-full text-sm">Start game</button>
+        </div>
+    </div>
+</div>
+
 <canvas id="canvas"></canvas>

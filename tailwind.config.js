@@ -1,7 +1,9 @@
 module.exports = {
-  content: ["./src/**/*.{html,js}"],
+  content: ["./views/index.hbs"],
   theme: {
     extend: {},
   },
   plugins: [],
-}
+};
+
+//content: ["./src/**/*.{html,js}"],
