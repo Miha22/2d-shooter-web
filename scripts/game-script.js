@@ -3,14 +3,16 @@ const { gsap } = require('gsap');
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
+const scoreName = document.querySelector("#scoreName");
 const scoreText = document.querySelector("#scoreValue");
+const bigScore = document.querySelector("#bigScore");
 const startBtn = document.querySelector("#startBtn");
 const startBanner = document.querySelector("#startBanner");
 const body = document.querySelector('body');
 let scoreValue = 0;
-const projectiles = [];
-const particles = [];
-const enemies = [];
+let projectiles = [];
+let particles = [];
+let enemies = [];
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const x = canvas.width / 2;
@@ -150,8 +152,18 @@ class Particle {
     }
 }
 
-const player = new Player(x, y, 30, 'green');
+let player = new Player(x, y, 30, 'rgb(10,141,255)');
 // const projectile = new Projectile(player.getX(), player.getY(), 7, 'red', { x: 1, y: 1 });
+
+function init(playerColor) {
+    player = new Player(x, y, 30, playerColor == null ? 'rgb(10,141,255)' : playerColor);
+    projectiles = [];
+    particles = [];
+    enemies = [];
+    scoreValue = 0;
+    scoreText.innerHTML = scoreValue;
+    bigScore.innerHTML = scoreValue;
+}
 
 function endGame(animationId) {
     cancelAnimationFrame(animationId);
@@ -234,8 +246,14 @@ function animate() {
         if(distToPlayer - e.radius - player.radius < 0.1) {
             //end game if player is too small
             if(player.radius / 1.1 < 10) {
+                gsap.to(player, { radius: 0, duration: 1 });//smooth player reize
+                createParticles(player, player.color, player.radius);
+
                 endGame(animationId);
                 dimBackground('black', 3);
+                dimScore('white', 3);
+                bigScore.innerHTML = scoreValue;
+                startBanner.style.display = 'flex';
                 return;
             }
             
@@ -342,15 +360,24 @@ window.addEventListener('click', (e) => {
     projectiles.push(new Projectile(player.getX(), player.getY(), 7, 'red', velocity));
 });
 
+//start game
 startBtn.addEventListener('click', () => {
+    init();
+
     startBanner.style.display = 'none';
     dimBackground('white', 3);
+    dimScore('black', 3);
     animate();
     spawnEnemies();
 });
 
 function dimBackground(color, duration) {
     gsap.to(body, { background: color, duration: duration });
+}
+
+function dimScore(color, duration) {
+    gsap.to(scoreName, { color: color, duration: duration });
+    gsap.to(scoreText, { color: color, duration: duration });
 }
 
 document.addEventListener('keydown', function(event) {
@@ -418,3 +445,4 @@ document.addEventListener('keyup', function(event) {
 });
 
 dimBackground('black', 3);
+dimScore('white, 3');

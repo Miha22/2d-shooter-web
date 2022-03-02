@@ -1,2 +1,3 @@
-Make player loose its parts and if enemy eats that parts, enemy grows. Same as when player hits the enemy with bullet, enemy drops the parts and player can eat that parts.
-Make shooting enemies also.
+- Make player loose its parts and if enemy eats that parts, enemy grows. Same as when player hits the enemy with bullet, enemy drops the parts and player can eat that parts.
+- Make shooting enemies also.
+- When player hits a bigger enemy, enemy or player should bounce back
