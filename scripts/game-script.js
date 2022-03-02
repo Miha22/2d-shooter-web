@@ -246,8 +246,8 @@ function animate() {
         if(distToPlayer - e.radius - player.radius < 0.1) {
             //end game if player is too small
             if(player.radius / 1.1 < 10) {
-                gsap.to(player, { radius: 0, duration: 1 });//smooth player reize
-                createParticles(player, player.color, player.radius);
+                //createParticles(player, player.color, player.radius);
+                //gsap.to(player, { radius: 0, duration: 1 });//smooth player reize
 
                 endGame(animationId);
                 dimBackground('black', 3);
